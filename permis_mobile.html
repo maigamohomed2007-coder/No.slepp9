@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLEPP9 — Permis Accéléré Paris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════════ */
+:root {
+  --gold: #F5C842;
+  --gold-light: #FFE27A;
+  --gold-dark: #C99A00;
+  --navy: #0B0E1A;
+  --navy-mid: #13182B;
+  --navy-light: #1C2340;
+  --white: #F8F6F0;
+  --muted: #8892AA;
+  --accent: #4A9EFF;
+  --success: #3DCC8E;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSEUR CUSTOM ── */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform .1s, width .25s, height .25s, opacity .25s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(245,200,66,.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform .18s ease, width .25s, height .25s, opacity .25s;
+}
+.cursor.hover { width: 14px; height: 14px; }
+.cursor-ring.hover { width: 50px; height: 50px; border-color: rgba(245,200,66,.7); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 48px;
+  transition: background .4s, padding .4s;
+}
+nav.scrolled {
+  background: rgba(11,14,26,.92);
+  backdrop-filter: blur(14px);
+  padding: 14px 48px;
+  border-bottom: 1px solid rgba(245,200,66,.08);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -.02em;
+  color: var(--gold);
+}
+.nav-logo span { color: var(--white); }
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: .88rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--gold);
+  color: var(--navy) !important;
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-weight: 700 !important;
+  font-size: .82rem !important;
+  letter-spacing: .04em;
+  transition: transform .2s, background .2s !important;
+}
+.nav-cta:hover { background: var(--gold-light) !important; transform: scale(1.04); }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  padding: 140px 72px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grain texture */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: .5;
+}
+
+/* Glow blob */
+.hero-blob {
+  position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(ellipse, rgba(245,200,66,.12) 0%, transparent 70%);
+  right: -100px; top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  animation: blobPulse 6s ease-in-out infinite;
+}
+@keyframes blobPulse {
+  0%,100% { transform: translateY(-50%) scale(1); opacity: .7; }
+  50% { transform: translateY(-52%) scale(1.05); opacity: 1; }
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp .7s .1s forwards;
+}
+.hero-label::before {
+  content: '';
+  width: 28px; height: 2px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5.5vw, 5.2rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.03em;
+  opacity: 0;
+  animation: fadeUp .8s .2s forwards;
+}
+.hero-title em {
+  font-style: normal;
+  color: var(--gold);
+  position: relative;
+}
+.hero-title em::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 4px; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: lineGrow .8s 1s forwards;
+}
+@keyframes lineGrow { to { transform: scaleX(1); } }
+
+.hero-sub {
+  margin-top: 24px;
+  font-size: 1.08rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 480px;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp .8s .35s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 44px;
+  align-items: center;
+  opacity: 0;
+  animation: fadeUp .8s .5s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .92rem;
+  letter-spacing: .02em;
+  padding: 16px 32px;
+  border-radius: 100px;
+  text-decoration: none;
+  border: none;
+  cursor: none;
+  transition: transform .25s, box-shadow .25s;
+  box-shadow: 0 8px 32px rgba(245,200,66,.25);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(245,200,66,.35);
+}
+.btn-primary svg { transition: transform .25s; }
+.btn-primary:hover svg { transform: translateX(4px); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  font-size: .9rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 16px 24px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,.12);
+  cursor: none;
+  transition: border-color .25s, color .25s;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,.35); }
+
+/* Hero stats */
+.hero-stats {
+  display: flex;
+  gap: 36px;
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  opacity: 0;
+  animation: fadeUp .8s .65s forwards;
+}
+.stat-item { }
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+.stat-num span { color: var(--gold); }
+.stat-label {
+  font-size: .8rem;
+  color: var(--muted);
+  margin-top: 5px;
+  letter-spacing: .04em;
+}
+
+/* Hero right — visual card */
+.hero-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeRight .9s .4s forwards;
+}
+
+.hero-card-main {
+  background: var(--navy-light);
+  border: 1px solid rgba(245,200,66,.14);
+  border-radius: 24px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-card-main::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(ellipse, rgba(245,200,66,.1) 0%, transparent 70%);
+}
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(61,204,142,.12);
+  color: var(--success);
+  border: 1px solid rgba(61,204,142,.25);
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+.card-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.5); }
+}
+.card-price {
+  font-family: var(--font-display);
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+.card-price sup {
+  font-size: 1.6rem;
+  font-weight: 600;
+  vertical-align: top;
+  margin-top: 8px;
+  color: var(--gold);
+}
+.card-price-label {
+  font-size: .82rem;
+  color: var(--muted);
+  margin-top: 6px;
+  font-weight: 300;
+}
+.card-features {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: .9rem;
+  color: rgba(248,246,240,.75);
+}
+.card-feature svg { flex-shrink: 0; }
+
+.hero-card-sm {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 18px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: .88rem;
+  color: var(--muted);
+}
+.hero-card-sm strong {
+  color: var(--white);
+  font-weight: 600;
+  display: block;
+  font-size: .95rem;
+  margin-bottom: 3px;
+}
+.card-sm-icon {
+  width: 48px; height: 48px;
+  background: rgba(245,200,66,.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.4rem;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ═══════════════════════════════════════════
+   SECTION TICKER
+═══════════════════════════════════════════ */
+.ticker-wrap {
+  background: var(--gold);
+  padding: 14px 0;
+  overflow: hidden;
+  position: relative;
+}
+.ticker-inner {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 28s linear infinite;
+}
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 40px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.ticker-dot {
+  width: 5px; height: 5px;
+  background: rgba(11,14,26,.35);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════════ */
+.section {
+  padding: 100px 72px;
+}
+.section-label {
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.08;
+  max-width: 600px;
+}
+.section-title em { font-style: normal; color: var(--gold); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 40px; left: 52px; right: 52px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,200,66,.3), transparent);
+}
+
+.step {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,.05);
+  padding: 40px 28px;
+  position: relative;
+  transition: border-color .3s, transform .3s;
+}
+.step:first-child { border-radius: 20px 0 0 20px; }
+.step:last-child { border-radius: 0 20px 20px 0; }
+.step:hover { border-color: rgba(245,200,66,.2); transform: translateY(-4px); }
+
+.step-num {
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: rgba(245,200,66,.08);
+  line-height: 1;
+  letter-spacing: -.05em;
+  position: absolute;
+  top: 16px; right: 20px;
+}
+.step-icon {
+  width: 52px; height: 52px;
+  background: rgba(245,200,66,.1);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+.step h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.step p {
+  font-size: .88rem;
+  color: var(--muted);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════
+   FORMULES
+═══════════════════════════════════════════ */
+.formules-section {
+  padding: 100px 72px;
+  background: var(--navy-mid);
+  position: relative;
+  overflow: hidden;
+}
+.formules-section::before {
+  content: '';
+  position: absolute;
+  left: -200px; top: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(245,200,66,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.formules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.formule-card {
+  background: var(--navy);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 28px;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+}
+.formule-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(245,200,66,.2);
+  box-shadow: 0 24px 60px rgba(0,0,0,.4);
+}
+.formule-card.featured {
+  border-color: rgba(245,200,66,.35);
+  background: linear-gradient(135deg, rgba(245,200,66,.05) 0%, var(--navy) 60%);
+}
+.formule-tag {
+  position: absolute;
+  top: -1px; right: 36px;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 0 0 10px 10px;
+}
+
+.formule-price {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 4.5rem;
+  letter-spacing: -.04em;
+  line-height: 1;
+  color: var(--gold);
+}
+.formule-price span { font-size: 2rem; vertical-align: top; margin-top: 10px; display: inline-block; }
+
+.formule-delay {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(61,204,142,.1);
+  color: var(--success);
+  border: 1px solid rgba(61,204,142,.2);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+.formule-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.formule-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: .92rem;
+  color: rgba(248,246,240,.8);
+  line-height: 1.5;
+}
+.formule-list .check {
+  width: 22px; height: 22px;
+  background: rgba(245,200,66,.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.formule-list .check svg { width: 12px; }
+
+.formule-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 36px;
+  padding: 15px;
+  border-radius: 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: none;
+  text-decoration: none;
+  transition: all .25s;
+}
+.formule-cta.gold {
+  background: var(--gold);
+  color: var(--navy);
+}
+.formule-cta.gold:hover { background: var(--gold-light); transform: scale(1.02); }
+.formule-cta.outline {
+  border: 1.5px solid rgba(245,200,66,.3);
+  color: var(--gold);
+}
+.formule-cta.outline:hover { border-color: var(--gold); background: rgba(245,200,66,.06); }
+
+/* ═══════════════════════════════════════════
+   TESTIMONIALS
+═══════════════════════════════════════════ */
+.testi-section {
+  padding: 100px 72px;
+  overflow: hidden;
+}
+.testi-track {
+  display: flex;
+  gap: 20px;
+  margin-top: 56px;
+  animation: scrollTrack 30s linear infinite;
+  width: max-content;
+}
+.testi-track:hover { animation-play-state: paused; }
+@keyframes scrollTrack {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.testi-card {
+  width: 340px;
+  flex-shrink: 0;
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 22px;
+  padding: 30px;
+}
+.testi-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.testi-stars span { color: var(--gold); font-size: 1rem; }
+.testi-text {
+  font-size: .92rem;
+  line-height: 1.7;
+  color: rgba(248,246,240,.8);
+  font-weight: 300;
+  margin-bottom: 22px;
+}
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.testi-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: .9rem;
+  color: var(--navy);
+}
+.testi-name {
+  font-weight: 600;
+  font-size: .9rem;
+}
+.testi-loc {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   GARANTIES
+═══════════════════════════════════════════ */
+.garanties {
+  padding: 80px 72px;
+  background: linear-gradient(180deg, var(--navy-mid) 0%, var(--navy) 100%);
+}
+.garanties-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 56px;
+}
+.garantie-item {
+  background: var(--navy);
+  padding: 40px 32px;
+  border: 1px solid rgba(255,255,255,.05);
+  text-align: center;
+  transition: border-color .3s;
+}
+.garantie-item:first-child { border-radius: 20px 0 0 20px; }
+.garantie-item:last-child  { border-radius: 0 20px 20px 0; }
+.garantie-item:hover { border-color: rgba(245,200,66,.15); }
+.garantie-icon {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+}
+.garantie-item h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.garantie-item p {
+  font-size: .86rem;
+  color: var(--muted);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════
+   CONTACT / CTA FINAL
+═══════════════════════════════════════════ */
+.cta-section {
+  padding: 100px 72px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  right: -100px; top: 50%;
+  transform: translateY(-50%);
+  width: 500px; height: 500px;
+  background: radial-gradient(ellipse, rgba(245,200,66,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.1;
+}
+.cta-title em { font-style: normal; color: var(--gold); }
+.cta-sub {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.contact-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(245,200,66,.12);
+  border-radius: 24px;
+  padding: 40px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--white);
+  font-size: .95rem;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  transition: background .25s, border-color .25s;
+  cursor: none;
+}
+.contact-item:hover { background: rgba(245,200,66,.08); border-color: rgba(245,200,66,.2); }
+.contact-item-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.contact-item-icon.whatsapp { background: rgba(37,211,102,.15); }
+.contact-item-icon.snap     { background: rgba(255,252,0,.12); }
+.contact-item .label {
+  font-size: .75rem;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 2px;
+}
+.contact-item strong { font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  border-top: 1px solid rgba(255,255,255,.05);
+  padding: 36px 72px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--gold);
+}
+.footer-logo span { color: var(--muted); }
+.footer-copy {
+  font-size: .8rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+.footer-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.footer-links a {
+  font-size: .8rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+.footer-links a:hover { color: var(--white); }
+
+/* ═══════════════════════════════════════════
+   FLOATING CTA
+═══════════════════════════════════════════ */
+.floating-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 90;
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .4s, transform .4s;
+}
+.floating-btn.visible { opacity: 1; transform: translateY(0); }
+.float-item {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  text-decoration: none;
+  cursor: none;
+  transition: transform .25s, box-shadow .25s;
+  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+}
+.float-item:hover { transform: translateY(-4px) scale(1.07); }
+.float-whatsapp { background: #25D366; }
+.float-snap     { background: #FFFC00; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; padding: 120px 36px 60px; }
+  .hero-visual { display: none; }
+  .section, .formules-section, .testi-section, .garanties, .cta-section { padding: 70px 36px; }
+  nav { padding: 18px 24px; }
+  nav.scrolled { padding: 12px 24px; }
+  .nav-links { display: none; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 2px; }
+  .step:first-child { border-radius: 20px 0 0 0; }
+  .step:last-child  { border-radius: 0 0 20px 0; }
+  .step:nth-child(2) { border-radius: 0 20px 0 0; }
+  .step:nth-child(3) { border-radius: 0 0 0 20px; }
+  .formules-grid { grid-template-columns: 1fr; }
+  .garanties-grid { grid-template-columns: 1fr; gap: 2px; }
+  .garantie-item:first-child { border-radius: 20px 20px 0 0; }
+  .garantie-item:last-child  { border-radius: 0 0 20px 20px; }
+  .cta-section { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 20px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+/* ═══════════════════════════════════════════
+   MOBILE — ≤ 640px
+═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+
+  /* Désactiver curseur custom sur touch */
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+  .btn-primary, .btn-secondary, .formule-cta,
+  .contact-item, .float-item, a, button { cursor: pointer; }
+
+  /* ── NAV ── */
+  nav { padding: 14px 20px; }
+  nav.scrolled { padding: 12px 20px; }
+  .nav-logo { font-size: 1.1rem; }
+  .nav-links { display: none; }
+
+  /* ── HERO ── */
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 100px 20px 50px;
+    gap: 30px;
+    min-height: auto;
+  }
+  .hero-visual { display: none; }
+  .hero-label { font-size: .72rem; margin-bottom: 18px; }
+  .hero-title { font-size: clamp(2.2rem, 9vw, 3rem); line-height: 1.05; }
+  .hero-sub { font-size: .95rem; margin-top: 16px; }
+  .hero-actions {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+    align-items: stretch;
+  }
+  .btn-primary, .btn-secondary {
+    justify-content: center;
+    width: 100%;
+    padding: 15px 20px;
+    font-size: .9rem;
+  }
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+  .stat-item { min-width: calc(50% - 10px); }
+  .stat-num { font-size: 1.6rem; }
+
+  /* ── TICKER ── */
+  .ticker-item { font-size: .75rem; padding: 0 24px; }
+
+  /* ── SECTIONS PADDING ── */
+  .section,
+  .formules-section,
+  .testi-section,
+  .garanties,
+  .cta-section { padding: 56px 20px; }
+
+  /* ── SECTION TITLES ── */
+  .section-title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+
+  /* ── ÉTAPES ── */
+  .steps {
+    grid-template-columns: 1fr;
+    margin-top: 36px;
+    gap: 2px;
+  }
+  .steps::before { display: none; }
+  .step:first-child { border-radius: 20px 20px 0 0; }
+  .step:last-child  { border-radius: 0 0 20px 20px; }
+  .step:nth-child(2),
+  .step:nth-child(3) { border-radius: 0; }
+  .step { padding: 28px 22px; }
+  .step-num { font-size: 3rem; top: 12px; right: 14px; }
+
+  /* ── FORMULES ── */
+  .formules-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+  .formule-card { padding: 32px 24px; border-radius: 22px; }
+  .formule-price { font-size: 3.5rem; }
+
+  /* ── TÉMOIGNAGES ── */
+  .testi-track { gap: 14px; }
+  .testi-card { width: 280px; padding: 22px; }
+  .testi-text { font-size: .87rem; }
+
+  /* ── GARANTIES ── */
+  .garanties-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .garantie-item { padding: 28px 22px; }
+  .garantie-item:first-child { border-radius: 20px 20px 0 0; }
+  .garantie-item:last-child  { border-radius: 0 0 20px 20px; }
+
+  /* ── CONTACT ── */
+  .cta-section { grid-template-columns: 1fr; gap: 32px; }
+  .cta-title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+  .contact-card { min-width: unset; width: 100%; padding: 24px 18px; }
+  .contact-item { font-size: .88rem; }
+
+  /* ── FOOTER ── */
+  footer { padding: 28px 20px; flex-direction: column; gap: 16px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 14px; }
+
+  /* ── FLOATING BTNS ── */
+  .floating-btn { bottom: 20px; right: 16px; gap: 8px; }
+  .float-item { width: 48px; height: 48px; font-size: 1.2rem; }
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE PETIT — ≤ 380px
+═══════════════════════════════════════════ */
+@media (max-width: 380px) {
+  .hero { padding: 90px 16px 40px; }
+  .hero-title { font-size: 2rem; }
+  .section,
+  .formules-section,
+  .testi-section,
+  .garanties,
+  .cta-section { padding: 44px 16px; }
+  .formule-price { font-size: 3rem; }
+  .testi-card { width: 260px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSEUR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">SLEPP<span>9</span></div>
+  <ul class="nav-links">
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#formules">Formules</a></li>
+    <li><a href="#avis">Avis</a></li>
+    <li><a href="#contact" class="nav-cta">Nous contacter</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-blob"></div>
+  <div>
+    <div class="hero-label">📍 Proche de Paris</div>
+    <h1 class="hero-title">
+      Ton permis en<br>
+      <em>moins de 15 jours</em>
+    </h1>
+    <p class="hero-sub">
+      Dates d'examen prioritaires, centre facile, transport inclus et dossier encadré par contrat. On gère tout — toi tu te concentres sur la conduite.
+    </p>
+    <div class="hero-actions">
+      <a href="https://wa.me/33767610952" class="btn-primary" target="_blank">
+        Prendre rendez-vous
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#formules" class="btn-secondary">
+        Voir les formules
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M8 3v10M3 9l5 4 5-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">15<span>j</span></div>
+        <div class="stat-label">Délai moyen<br>d'obtention</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">699<span>€</span></div>
+        <div class="stat-label">À partir de</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100<span>%</span></div>
+        <div class="stat-label">Contrat signé<br>garanti</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUAL CARD -->
+  <div class="hero-visual">
+    <div class="hero-card-main">
+      <div class="card-badge">Places disponibles</div>
+      <div class="card-price"><sup>€</sup>799</div>
+      <div class="card-price-label">Formule complète avec 2h de conduite</div>
+      <div class="card-features">
+        <div class="card-feature">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="#F5C842" stroke-width="1.4"/>
+            <path d="M6.5 10l2.5 2.5 4.5-5" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Dates prioritaires sous 15 jours
+        </div>
+        <div class="card-feature">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="#F5C842" stroke-width="1.4"/>
+            <path d="M6.5 10l2.5 2.5 4.5-5" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Démarches entièrement accélérées
+        </div>
+        <div class="card-feature">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="#F5C842" stroke-width="1.4"/>
+            <path d="M6.5 10l2.5 2.5 4.5-5" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          +2h de conduite sur centre d'examen
+        </div>
+        <div class="card-feature">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="#F5C842" stroke-width="1.4"/>
+            <path d="M6.5 10l2.5 2.5 4.5-5" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Transport domicile → auto-école inclus
+        </div>
+      </div>
+    </div>
+    <div class="hero-card-sm">
+      <div>
+        <strong>Contrat signé</strong>
+        Engagement formalisé, aucune surprise
+      </div>
+      <div class="card-sm-icon">📋</div>
+    </div>
+    <div class="hero-card-sm">
+      <div>
+        <strong>Transport inclus</strong>
+        On te prend en charge depuis chez toi
+      </div>
+      <div class="card-sm-icon">🚗</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span>Permis en 15 jours</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Transport inclus</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Contrat signé</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Centre facile</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Dossier géré</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Proche de Paris</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Dates prioritaires</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Permis en 15 jours</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Transport inclus</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Contrat signé</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Centre facile</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Dossier géré</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Proche de Paris</span><span class="ticker-dot"></span></div>
+    <div class="ticker-item"><span>Dates prioritaires</span><span class="ticker-dot"></span></div>
+  </div>
+</div>
+
+<!-- ═══ COMMENT ÇA MARCHE ═══ -->
+<section class="section" id="comment">
+  <div class="section-label reveal">Comment ça marche</div>
+  <h2 class="section-title reveal reveal-delay-1">Simple, rapide,<br><em>encadré</em></h2>
+
+  <div class="steps">
+    <div class="step reveal reveal-delay-1">
+      <div class="step-num">01</div>
+      <div class="step-icon">💬</div>
+      <h3>Contact</h3>
+      <p>Tu nous contactes sur WhatsApp ou Snapchat. On fait le point sur ta situation en quelques messages.</p>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-num">02</div>
+      <div class="step-icon">📋</div>
+      <h3>Contrat</h3>
+      <p>On établit un contrat formel qui détaille ta formule, les dates, le transport et les engagements de chaque côté.</p>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-num">03</div>
+      <div class="step-icon">🗓️</div>
+      <h3>Date prioritaire</h3>
+      <p>On t'obtient une date d'examen prioritaire dans un centre facile, généralement sous 15 jours.</p>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-num">04</div>
+      <div class="step-icon">🏆</div>
+      <h3>Tu passes</h3>
+      <p>Le jour J, on te transporte depuis chez toi. Tu passes l'examen dans les meilleures conditions possible.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FORMULES ═══ -->
+<section class="formules-section" id="formules">
+  <div class="section-label reveal">Nos formules</div>
+  <h2 class="section-title reveal reveal-delay-1">Choisis ce qui<br><em>te correspond</em></h2>
+
+  <div class="formules-grid">
+    <!-- Formule PREMIUM -->
+    <div class="formule-card featured reveal reveal-delay-1">
+      <div class="formule-tag">⭐ Recommandée</div>
+      <div class="formule-price"><span>€</span>799</div>
+      <div class="formule-delay">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5.5" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 3v3l2 2" stroke="currentColor" stroke-linecap="round"/></svg>
+        Dates sous 15 jours
+      </div>
+      <ul class="formule-list">
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Démarches entièrement accélérées
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <strong>+2h de conduite sur le centre d'examen</strong> — la formule la plus efficace
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Transport domicile → auto-école inclus
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Contrat formel signé — zéro mauvaise surprise
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Centre d'examen facile proche de Paris
+        </li>
+      </ul>
+      <a href="https://wa.me/33767610952?text=Bonjour%2C+je+suis+intéressé+par+la+formule+à+799€" class="formule-cta gold" target="_blank">
+        Je veux cette formule →
+      </a>
+    </div>
+
+    <!-- Formule ESSENTIELLE -->
+    <div class="formule-card reveal reveal-delay-2">
+      <div class="formule-price"><span>€</span>699</div>
+      <div class="formule-delay">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5.5" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 3v3l2 2" stroke="currentColor" stroke-linecap="round"/></svg>
+        Dates sous 15 jours
+      </div>
+      <ul class="formule-list">
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Démarches accélérées
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Fiches conseils + appels avant l'examen
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Pré-évaluation en ligne de 20 minutes
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Transport domicile → auto-école inclus
+        </li>
+        <li>
+          <span class="check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F5C842" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Contrat formel signé
+        </li>
+      </ul>
+      <a href="https://wa.me/33767610952?text=Bonjour%2C+je+suis+intéressé+par+la+formule+à+699€" class="formule-cta outline" target="_blank">
+        Je veux cette formule →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TÉMOIGNAGES ═══ -->
+<section class="testi-section" id="avis">
+  <div class="section-label reveal">Ils ont réussi</div>
+  <h2 class="section-title reveal reveal-delay-1">Ils en parlent<br><em>mieux que nous</em></h2>
+
+  <div class="testi-track">
+    <!-- Repeat set 1 -->
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"J'avais raté 2 fois avec mon auto-école. Là en 12 jours j'avais une date, j'ai passé le permis et je l'ai eu du premier coup. Le transport c'est vraiment le petit plus."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div>
+          <div class="testi-name">Réda M.</div>
+          <div class="testi-loc">Seine-Saint-Denis · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Franchement au début j'étais sceptique mais le contrat m'a rassuré. Tout s'est passé exactement comme prévu. Merci à toute l'équipe, je recommande à 100%."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">E</div>
+        <div>
+          <div class="testi-name">Emzy</div>
+          <div class="testi-loc">Paris · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Dates obtenues en 10 jours, centre hyper accessible, j'ai eu mon permis. La pré-évaluation de 20 min m'a vraiment aidée à me préparer mentalement."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">C</div>
+        <div>
+          <div class="testi-name">Charolife</div>
+          <div class="testi-loc">Val-de-Marne · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Le fait d'être pris en charge depuis chez moi le matin de l'exam ça enlève tout le stress de la logistique. Je me suis concentré uniquement sur ma conduite."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">S</div>
+        <div>
+          <div class="testi-name">Sohane</div>
+          <div class="testi-loc">Hauts-de-Seine · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Ça fait des mois que j'attendais une date avec mon école. Là en 2 semaines c'était réglé. Et le centre était vraiment simple, pas de stress inutile."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">M</div>
+        <div>
+          <div class="testi-name">Moulay</div>
+          <div class="testi-loc">Île-de-France · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <!-- Repeat set 2 (pour l'animation infinie) -->
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"J'avais raté 2 fois avec mon auto-école. Là en 12 jours j'avais une date, j'ai passé le permis et je l'ai eu du premier coup. Le transport c'est vraiment le petit plus."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div>
+          <div class="testi-name">Réda M.</div>
+          <div class="testi-loc">Seine-Saint-Denis · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Franchement au début j'étais sceptique mais le contrat m'a rassuré. Tout s'est passé exactement comme prévu. Merci à toute l'équipe, je recommande à 100%."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">E</div>
+        <div>
+          <div class="testi-name">Emzy</div>
+          <div class="testi-loc">Paris · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Dates obtenues en 10 jours, centre hyper accessible, j'ai eu mon permis. La pré-évaluation de 20 min m'a vraiment aidée à me préparer mentalement."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">C</div>
+        <div>
+          <div class="testi-name">Charolife</div>
+          <div class="testi-loc">Val-de-Marne · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Le fait d'être pris en charge depuis chez moi le matin de l'exam ça enlève tout le stress de la logistique. Je me suis concentré uniquement sur ma conduite."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">S</div>
+        <div>
+          <div class="testi-name">Sohane</div>
+          <div class="testi-loc">Hauts-de-Seine · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Ça fait des mois que j'attendais une date avec mon école. Là en 2 semaines c'était réglé. Et le centre était vraiment simple, pas de stress inutile."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">M</div>
+        <div>
+          <div class="testi-name">Moulay</div>
+          <div class="testi-loc">Île-de-France · Validé ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GARANTIES ═══ -->
+<section class="garanties">
+  <div class="section-label reveal" style="text-align:center">Ce qui nous différencie</div>
+  <h2 class="section-title reveal reveal-delay-1" style="text-align:center;max-width:100%">Nos <em>engagements</em></h2>
+  <div class="garanties-grid" style="margin-top:56px">
+    <div class="garantie-item reveal reveal-delay-1">
+      <div class="garantie-icon">📋</div>
+      <h3>Contrat formel</h3>
+      <p>Chaque accompagnement est encadré par un contrat signé. Tes droits sont protégés, nos obligations sont claires.</p>
+    </div>
+    <div class="garantie-item reveal reveal-delay-2">
+      <div class="garantie-icon">🚘</div>
+      <h3>Transport inclus</h3>
+      <p>On te prend en charge depuis ton domicile jusqu'à l'auto-école et au centre d'examen. Zéro galère de transport.</p>
+    </div>
+    <div class="garantie-item reveal reveal-delay-3">
+      <div class="garantie-icon">⚡</div>
+      <h3>Rapidité</h3>
+      <p>Dates prioritaires sous 15 jours dans des centres faciles. On optimise chaque étape pour que tu passes au plus vite.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA CONTACT ═══ -->
+<section class="cta-section" id="contact">
+  <div>
+    <div class="section-label reveal">On est disponibles</div>
+    <h2 class="cta-title reveal reveal-delay-1">
+      Prêt à passer<br>
+      <em>ton permis ?</em>
+    </h2>
+    <p class="cta-sub reveal reveal-delay-2">
+      Envoie-nous un message, on te répond vite et on t'explique comment ça se passe. Pas de prise de tête.
+    </p>
+  </div>
+  <div class="contact-card reveal reveal-delay-2">
+    <a href="https://wa.me/33767610952" class="contact-item" target="_blank">
+      <div class="contact-item-icon whatsapp">💬</div>
+      <div>
+        <span class="label">WhatsApp</span>
+        <strong>+33 7 67 61 09 52</strong>
+      </div>
+    </a>
+    <a href="https://www.snapchat.com/add/no.slepp9" class="contact-item" target="_blank">
+      <div class="contact-item-icon snap">👻</div>
+      <div>
+        <span class="label">Snapchat</span>
+        <strong>no.slepp9</strong>
+      </div>
+    </a>
+    <a href="tel:+33767610952" class="contact-item">
+      <div class="contact-item-icon" style="background:rgba(74,158,255,.15)">📞</div>
+      <div>
+        <span class="label">Téléphone</span>
+        <strong>07 67 61 09 52</strong>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">SLEPP<span>9</span></div>
+  <ul class="footer-links">
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#formules">Formules</a></li>
+    <li><a href="#avis">Avis</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 SLEPP9 — Permis accéléré Paris</p>
+</footer>
+
+<!-- FLOATING BUTTONS -->
+<div class="floating-btn" id="floatingBtn">
+  <a href="https://wa.me/33767610952" class="float-item float-whatsapp" target="_blank" title="WhatsApp">💬</a>
+  <a href="https://www.snapchat.com/add/no.slepp9" class="float-item float-snap" target="_blank" title="Snapchat">👻</a>
+</div>
+
+<!-- ═══ SCRIPTS ═══ -->
+<script>
+/* ── Curseur custom ── */
+const cursor     = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+});
+
+function animRing() {
+  rx += (mx - rx) * .12;
+  ry += (my - ry) * .12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+document.querySelectorAll('a, button, .formule-card, .step, .garantie-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); cursorRing.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); cursorRing.classList.remove('hover'); });
+});
+
+/* ── Nav scroll ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('floatingBtn').classList.toggle('visible', window.scrollY > 300);
+});
+
+/* ── Scroll reveal ── */
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+}, { threshold: .12 });
+reveals.forEach(el => obs.observe(el));
+
+/* ── Compteurs animés ── */
+function animateCount(el, target, suffix, duration) {
+  let start = 0;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const val = Math.floor(progress * target);
+    el.querySelector('.val').textContent = val;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+</script>
+</body>
+</html>
